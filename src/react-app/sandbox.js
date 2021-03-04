@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { ExternalLink } from "@styled-icons/heroicons-outline/ExternalLink";
 
 function Sandbox({ exerciseInfo }) {
   const [selectedTab, setSelectedTab] = useState("exercise");
@@ -44,7 +45,7 @@ function Sandbox({ exerciseInfo }) {
         hidden={selectedTab !== "exercise"}
       >
         <a href={exercise.isolatedPath} target="_blank" rel="noreferrer">
-          Open in new tab
+          <ExternalLink size="20" /> Open in new tab
         </a>
         <iframe
           title={`${readme.title} Exercise`}
@@ -58,7 +59,7 @@ function Sandbox({ exerciseInfo }) {
         hidden={selectedTab !== "solution"}
       >
         <a href={solution.isolatedPath} target="_blank" rel="noreferrer">
-          Open in new tab
+          <ExternalLink size="20" /> Open in new tab
         </a>
         <iframe
           title={`${readme.title} Solution`}

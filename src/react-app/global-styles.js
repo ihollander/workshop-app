@@ -73,7 +73,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0.2rem 2rem;
     font-size: 0.9em;
-    background: var(--background-secondary);
+    background: var(--background-secondary-light);
     border-left: 3px solid var(--color-primary);
     border-radius: 3px;
   }

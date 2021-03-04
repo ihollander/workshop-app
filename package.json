@@ -1,8 +1,14 @@
 {
   "name": "@ihollander/workshop-app",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.0.1",
+  "description": "Framework for creating React workshops",
+  "author": "ihollander",
+  "license": "MIT",
+  "repository": "ihollander/workshop-app",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=10"
+  },
   "dependencies": {
     "@babel/runtime": "^7.13.9",
     "babel-loader": "^8.1.0",
@@ -11,6 +17,7 @@
     "raw-loader": "^4.0.2",
     "react-router-dom": "^5.2.0",
     "styled-components": "^5.2.1",
+    "styled-icons": "^10.29.0",
     "styled-normalize": "^8.0.7"
   },
   "devDependencies": {
@@ -33,7 +40,8 @@
     "codegen.js"
   ],
   "scripts": {
-    "build": "npx babel src --out-dir dist"
+    "build": "npx babel src --out-dir dist",
+    "build:watch": "npx babel src --watch --out-dir dist"
   },
   "eslintConfig": {
     "extends": [

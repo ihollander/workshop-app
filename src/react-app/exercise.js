@@ -73,12 +73,12 @@ const ReadmeContainer = styled.section`
     padding: 2px 6px;
     margin: 1px;
     border-radius: 3px;
-    background-color: var(--background-secondary);
+    background-color: var(--background-secondary-light);
   }
 
   pre {
     position: relative;
-    margin: 1rem -1rem;
+    margin: 1.5rem -1rem;
     background: var(--background-code);
     border: 3px solid var(--color-primary);
     box-shadow: 1px 1px var(--background-primary),

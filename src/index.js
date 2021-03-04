@@ -54,10 +54,11 @@ function makeApp({ imports, fileInfo, projectTitle }) {
   // when location changes, either run in 'isolated' mode or render the workshop app
   function handleLocationChange(location = history.location) {
     const { pathname } = location;
+    let file;
     if (pathname?.startsWith("/isolated")) {
       // render isolated component
       const filePath = pathname.replace("/isolated", "src");
-      const file = fileInfo.find((f) => f.filePath === filePath);
+      file = fileInfo.find((f) => f.filePath === filePath);
       if (file) {
         renderIsolated(file);
       }
@@ -68,8 +69,24 @@ function makeApp({ imports, fileInfo, projectTitle }) {
       // };
       // renderIsolated(file);
     } else {
+      const number = Number(pathname.split("/").slice(-1)[0]);
+      file = fileInfo.find((f) => f.type === "readme" && f.number === number);
       renderReact();
     }
+
+    // set title
+    // setTimeout(() => {
+    const title = fileInfo.find(
+      (f) => f.number === file?.number && f.type === "readme"
+    )?.title;
+    if (file && title) {
+      const newTitle = `${file.number}. ${title}`;
+      if (document.title !== newTitle) {
+        document.title = newTitle;
+      }
+    }
+    // }, 100);
+
     previousLocation = location;
   }
 
