@@ -58,18 +58,18 @@ function loadFiles() {
   const cwd = process.cwd();
   const fileInfo = glob
     // find files from predefined directories
-    .sync("src/{exercise,solution,examples}/*.+(js|html|md)", {
+    .sync("src/{exercise,solution,examples}/*.+(js|html|md|mdx)", {
       cwd,
     })
     // parse file details
-    .map((filePath) => {
+    .map(filePath => {
       const fullFilePath = path.join(cwd, filePath);
       const { dir, name, ext } = path.parse(fullFilePath);
       // type can either come from the directory name (exercise, solution, examples)
       let type = path.basename(dir);
       let title;
       // or type can come from the file extension (readme)
-      if (ext === ".md" || ext === "mdx") {
+      if (ext === ".md" || ext === ".mdx") {
         type = "readme";
         const contents = String(fs.readFileSync(fullFilePath));
         const [firstLine] = contents.split(/\r?\n/);
@@ -78,6 +78,10 @@ function loadFiles() {
       }
       // exercise number for navigation
       const number = Number(name.match(/(?<num>^\d+)/)?.groups.num || 0);
+      const isExtraCredit = name.includes(".extra-");
+      const extraCreditNumber = isExtraCredit
+        ? Number((name.match(/(\d+$)/) ?? [null])[0])
+        : 0;
       // todo: get title from file contents || file name?
       return {
         id: filePath,
@@ -89,6 +93,8 @@ function loadFiles() {
         number,
         isolatedPath: filePath.replace("src", "/isolated"),
         title,
+        isExtraCredit,
+        extraCreditNumber,
       };
     });
 
@@ -104,7 +110,7 @@ function getAppInfo() {
     let loaders = "";
     if (ext === ".html") {
       loaders = "!raw-loader!";
-    } else if (ext === ".md") {
+    } else if (ext === ".md" || ext === ".mdx") {
       loaders = "!babel-loader!mdx-loader!";
     }
 

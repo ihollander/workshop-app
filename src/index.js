@@ -39,8 +39,14 @@ function makeApp({ imports, fileInfo, projectTitle }) {
   for (const info of fileInfo) {
     exercises[info.number] = exercises[info.number] || {};
     if (["exercise", "readme", "solution"].includes(info.type)) {
-      exercises[info.number][info.type] = info;
-      exercises[info.number][info.type].importFn = imports[info.id];
+      info.importFn = imports[info.id];
+      if (info.type === "solution") {
+        exercises[info.number][info.type] =
+          exercises[info.number][info.type] || [];
+        exercises[info.number][info.type].push(info);
+      } else {
+        exercises[info.number][info.type] = info;
+      }
     }
   }
 
@@ -58,7 +64,7 @@ function makeApp({ imports, fileInfo, projectTitle }) {
     if (pathname?.startsWith("/isolated")) {
       // render isolated component
       const filePath = pathname.replace("/isolated", "src");
-      file = fileInfo.find((f) => f.filePath === filePath);
+      file = fileInfo.find(f => f.filePath === filePath);
       if (file) {
         renderIsolated(file);
       }
@@ -70,14 +76,14 @@ function makeApp({ imports, fileInfo, projectTitle }) {
       // renderIsolated(file);
     } else {
       const number = Number(pathname.split("/").slice(-1)[0]);
-      file = fileInfo.find((f) => f.type === "readme" && f.number === number);
+      file = fileInfo.find(f => f.type === "readme" && f.number === number);
       renderReact();
     }
 
     // set title
     // setTimeout(() => {
     const title = fileInfo.find(
-      (f) => f.number === file?.number && f.type === "readme"
+      f => f.number === file?.number && f.type === "readme"
     )?.title;
     if (file && title) {
       const newTitle = `${file.number}. ${title}`;
@@ -94,7 +100,7 @@ function makeApp({ imports, fileInfo, projectTitle }) {
   function renderIsolated(file) {
     if (history.location !== previousLocation) return;
 
-    file.importFn().then(async (module) => {
+    file.importFn().then(async module => {
       if (typeof module.default === "function") {
         // React component
         const component = React.createElement(module.default);
@@ -116,7 +122,6 @@ function makeApp({ imports, fileInfo, projectTitle }) {
             // if (attrName === "src") {
             //   // resolve path from src
             //   const something = await import("../solution/temp/test.js");
-            //   console.log(something);
             // } else {
             // }
             newScript.setAttribute(

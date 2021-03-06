@@ -5,6 +5,7 @@ import GlobalStyle from "./global-styles";
 import Home from "./home";
 import Exercise from "./exercise";
 import Header from "./header";
+import FourOhFour from "./four-oh-four";
 import { ThemeProvider } from "./theme";
 
 function App({ exercises, projectTitle }) {
@@ -21,6 +22,9 @@ function App({ exercises, projectTitle }) {
               <Header exercises={exercises} projectTitle={projectTitle} />
               <Exercise exercises={exercises} />
             </PageWrapper>
+          </Route>
+          <Route path="*">
+            <FourOhFour />
           </Route>
         </Switch>
       </ThemeProvider>

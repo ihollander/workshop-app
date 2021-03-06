@@ -5,9 +5,7 @@ import { Link } from "react-router-dom";
 function Home({ exercises, projectTitle }) {
   const numbers = exercises
     .filter(Boolean)
-    .map((ex) => ({ title: ex.readme.title, number: ex.readme.number }));
-
-  console.log(numbers);
+    .map(ex => ({ title: ex.readme.title, number: ex.readme.number }));
 
   return (
     <PageWrapper>
@@ -46,19 +44,19 @@ const TitleWrapper = styled.div`
     font-weight: var(--font-weight-extra-bold);
     color: var(--color-primary);
     text-shadow: 1px 1px var(--background-secondary),
-      2px 2px var(--color-secondary);
+      3px 3px var(--color-secondary);
     margin-right: 0.5rem;
   }
 
   h1 {
     margin: 0;
     padding: 0;
-    font-size: 3rem;
+    font-size: 4rem;
   }
 
   h2 {
     color: var(--font-color-light);
-    font-size: 2rem;
+    font-size: 2.7rem;
     margin: 0;
     padding: 0;
   }
@@ -78,6 +76,8 @@ const ExerciseList = styled.ul`
     padding: 1rem;
     background: var(--background-secondary);
     transition: background 400ms ease;
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-bold);
   }
 
   li a:hover {

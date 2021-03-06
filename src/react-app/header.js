@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link, NavLink } from "react-router-dom";
 import { useTheme } from "./theme";
 
-function Header({ projectTitle, exercises, setIsShowingMenu }) {
+function Header({ projectTitle, exercises }) {
   const { colorMode, setColorMode } = useTheme();
   const icon = colorMode === "light" ? "☀️" : "🌙";
 

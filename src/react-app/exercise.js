@@ -1,23 +1,50 @@
 import React, { Suspense } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Sandbox from "./sandbox";
+import FullpageLoader from "./fullpage-loader";
+import FourOhFour from "./four-oh-four";
 import { prismTheme } from "./theme";
 
 function Exercise({ exercises }) {
   const { exerciseId } = useParams();
   const exerciseInfo = exercises[exerciseId];
 
-  if (!exerciseInfo) return <h1>404 Not Found</h1>;
+  const next = exercises[Number(exerciseId) + 1];
+  const prev = exercises[Number(exerciseId) - 1];
 
-  const { readme } = exerciseInfo;
+  if (!exerciseInfo) return <FourOhFour />;
 
-  const readmeComp = React.createElement(React.lazy(readme.importFn));
+  const Readme = React.lazy(exerciseInfo.readme.importFn);
 
   return (
     <ExerciseContainer>
       <ReadmeContainer>
-        <Suspense fallback={<div>Loading...</div>}>{readmeComp}</Suspense>
+        <Suspense fallback={<FullpageLoader />}>
+          <Readme />
+          <ReadmeButtons>
+            {prev ? (
+              <Link to={`/${prev.readme.number}`}>
+                <span role="img" aria-labelledby="arrow-left">
+                  ←
+                </span>
+                <span>Previous</span>
+              </Link>
+            ) : (
+              <div />
+            )}
+            {next ? (
+              <Link to={`/${next.readme.number}`}>
+                <span>Next</span>
+                <span role="img" aria-labelledby="arrow-right">
+                  →
+                </span>
+              </Link>
+            ) : (
+              <div />
+            )}
+          </ReadmeButtons>
+        </Suspense>
       </ReadmeContainer>
       <Sandbox exerciseInfo={exerciseInfo} />
     </ExerciseContainer>
@@ -76,9 +103,13 @@ const ReadmeContainer = styled.section`
     background-color: var(--background-secondary-light);
   }
 
+  > blockquote code {
+    background: var(--background-primary);
+  }
+
   pre {
     position: relative;
-    margin: 1.5rem -1rem;
+    margin: 2rem -1rem;
     background: var(--background-code);
     border: 3px solid var(--color-primary);
     box-shadow: 1px 1px var(--background-primary),
@@ -103,6 +134,42 @@ const ReadmeContainer = styled.section`
     color: white;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+  }
+`;
+
+const ReadmeButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem 0;
+
+  a {
+    display: inline-block;
+    max-width: 40%;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    color: var(--font-color);
+    border: 3px solid var(--color-primary);
+    box-shadow: 4px 4px var(--color-secondary);
+    border-radius: 3px;
+    background: var(--background-secondary);
+    cursor: pointer;
+    outline: none;
+    transition: 100ms ease;
+  }
+
+  a:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px var(--color-secondary);
+  }
+
+  a:focus {
+    border: 3px solid var(--color-secondary);
+    background-color: var(--color-secondary);
+  }
+
+  a span[role="img"] {
+    margin: 0 0.5rem;
+    font-size: 1.25rem;
   }
 `;
 

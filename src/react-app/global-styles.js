@@ -77,7 +77,6 @@ const GlobalStyle = createGlobalStyle`
     border-left: 3px solid var(--color-primary);
     border-radius: 3px;
   }
-
 `;
 
 export default GlobalStyle;
