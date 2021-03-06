@@ -64,7 +64,7 @@ const ExerciseContainer = styled.main`
 
 const ReadmeContainer = styled.section`
   padding: 2rem 2.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   font-size: 18px;
   background: var(--background-primary);
 

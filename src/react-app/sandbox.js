@@ -18,7 +18,7 @@ function Sandbox({ exerciseInfo }) {
     localStorage.setItem(tabKey, selectedTab);
   }, [tabKey, selectedTab]);
 
-  const { exercise, solution, readme } = exerciseInfo;
+  const { readme, exercise, solution = [] } = exerciseInfo;
 
   const sortedSolutions = [...solution].sort(
     (a, b) => a.extraCreditNumber - b.extraCreditNumber
@@ -36,17 +36,19 @@ function Sandbox({ exerciseInfo }) {
         >
           Exercise
         </button>
-        <button
-          role="tab"
-          onClick={() =>
-            setSelectedTab(`solution-${sortedSolutions[0].extraCreditNumber}`)
-          }
-          aria-selected={selectedTab.includes("solution") && "true"}
-          aria-controls="solution"
-          id="tab-2"
-        >
-          Solutions
-        </button>
+        {sortedSolutions.length > 0 && (
+          <button
+            role="tab"
+            onClick={() =>
+              setSelectedTab(`solution-${sortedSolutions[0].extraCreditNumber}`)
+            }
+            aria-selected={selectedTab.includes("solution") && "true"}
+            aria-controls="solution"
+            id="tab-2"
+          >
+            Solutions
+          </button>
+        )}
       </nav>
       <div
         id="exercise"

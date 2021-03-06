@@ -3563,7 +3563,7 @@
     "tiny-invariant" "^1.0.2"
     "tiny-warning" "^1.0.0"
 
-"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@^16.13.1 || ^17.0.0", "react@>= 16.8.0", "react@>=15", "react@17.0.1":
+"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@^16.13.1 || ^17.0.0", "react@>= 16.8.0", "react@>=15", "react@17.0.1", "react@file:../workshop-custom-hooks/node_modules/react":
   "resolved" "file:../workshop-custom-hooks/node_modules/react"
   "version" "17.0.1"
   dependencies:
