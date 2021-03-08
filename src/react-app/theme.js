@@ -3,7 +3,9 @@ import React, { useContext, useEffect } from "react";
 const ThemeContext = React.createContext();
 
 function getInitialColor() {
-  const savedPreference = window.localStorage.getItem("color-mode");
+  const savedPreference = window.localStorage.getItem(
+    "__workshop_app_color_mode"
+  );
   if (savedPreference) return savedPreference;
 
   const query = window.matchMedia("(prefers-color-scheme: dark)");
@@ -63,16 +65,12 @@ function setVariables(theme) {
 }
 
 export function ThemeProvider({ children }) {
-  const [colorMode, rawSetColorMode] = React.useState(getInitialColor);
+  const [colorMode, setColorMode] = React.useState(getInitialColor);
 
   useEffect(() => {
     setVariables(colorMode);
+    window.localStorage.setItem("__workshop_app_color_mode", colorMode);
   }, [colorMode]);
-
-  function setColorMode(theme) {
-    rawSetColorMode(theme);
-    window.localStorage.setItem("color-mode", theme);
-  }
 
   return (
     <ThemeContext.Provider value={{ colorMode, setColorMode }}>

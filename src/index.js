@@ -60,6 +60,7 @@ function makeApp({ imports, fileInfo, projectTitle }) {
   // when location changes, either run in 'isolated' mode or render the workshop app
   function handleLocationChange(location = history.location) {
     const { pathname } = location;
+    if (!pathname) return;
     let file;
     if (pathname?.startsWith("/isolated")) {
       // render isolated component
@@ -68,12 +69,6 @@ function makeApp({ imports, fileInfo, projectTitle }) {
       if (file) {
         renderIsolated(file);
       }
-    } else if (pathname === "/test-report") {
-      // this setup is done in the jesthtmlreporter.config.json file
-      // const file = {
-      //   importFn: () => import("!raw-loader!../__tests__/report.html"),
-      // };
-      // renderIsolated(file);
     } else {
       const number = Number(pathname.split("/").slice(-1)[0]);
       file = fileInfo.find(f => f.type === "readme" && f.number === number);

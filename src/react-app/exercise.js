@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Sandbox from "./sandbox";
@@ -9,6 +9,8 @@ import { prismTheme } from "./theme";
 function Exercise({ exercises }) {
   const { exerciseId } = useParams();
   const exerciseInfo = exercises[exerciseId];
+  const [isReadmeVisible, setIsReadmeVisible] = useState(true);
+  const [isSandboxVisible, setIsSandboxVisible] = useState(true);
 
   const next = exercises[Number(exerciseId) + 1];
   const prev = exercises[Number(exerciseId) - 1];
@@ -18,51 +20,86 @@ function Exercise({ exercises }) {
   const Readme = React.lazy(exerciseInfo.readme.importFn);
 
   return (
-    <ExerciseContainer>
-      <ReadmeContainer>
-        <Suspense fallback={<FullpageLoader />}>
-          <Readme />
-          <ReadmeButtons>
-            {prev ? (
-              <Link to={`/${prev.readme.number}`}>
-                <span role="img" aria-labelledby="arrow-left">
-                  ←
-                </span>
-                <span>Previous</span>
-              </Link>
-            ) : (
-              <div />
-            )}
-            {next ? (
-              <Link to={`/${next.readme.number}`}>
-                <span>Next</span>
-                <span role="img" aria-labelledby="arrow-right">
-                  →
-                </span>
-              </Link>
-            ) : (
-              <div />
-            )}
-          </ReadmeButtons>
-        </Suspense>
-      </ReadmeContainer>
-      <Sandbox exerciseInfo={exerciseInfo} />
-    </ExerciseContainer>
+    <>
+      <ExerciseContainer split={isReadmeVisible && isSandboxVisible}>
+        <ReadmeContainer isVisible={isReadmeVisible}>
+          <Suspense fallback={<FullpageLoader />}>
+            <Readme />
+            <ReadmeButtons>
+              {prev ? (
+                <Link to={`/${prev.readme.number}`}>
+                  <span role="img" aria-labelledby="arrow-left">
+                    ←
+                  </span>
+                  <span>Previous</span>
+                </Link>
+              ) : (
+                <div />
+              )}
+              {next ? (
+                <Link to={`/${next.readme.number}`}>
+                  <span>Next</span>
+                  <span role="img" aria-labelledby="arrow-right">
+                    →
+                  </span>
+                </Link>
+              ) : (
+                <div />
+              )}
+            </ReadmeButtons>
+          </Suspense>
+        </ReadmeContainer>
+        <Sandbox exerciseInfo={exerciseInfo} isVisible={isSandboxVisible} />
+      </ExerciseContainer>
+      <WindowManager>
+        <label>
+          Show Readme{" "}
+          <input
+            type="checkbox"
+            checked={isReadmeVisible}
+            onChange={e => setIsReadmeVisible(e.target.checked)}
+          />
+        </label>
+        <label>
+          Show Exercise{" "}
+          <input
+            type="checkbox"
+            checked={isSandboxVisible}
+            onChange={e => setIsSandboxVisible(e.target.checked)}
+          />
+        </label>
+      </WindowManager>
+    </>
   );
 }
+
+const WindowManager = styled.nav`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--background-secondary-light);
+`;
 
 const ExerciseContainer = styled.main`
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: 50% 50%;
+  grid-template-rows: ${({ split }) => (split ? "50% 50%" : "100%")};
 
-  @media (min-width: 600px) {
-    grid-template-columns: minmax(400px, 50%) 1fr;
+  @media (min-width: 800px) {
+    grid-template-columns: ${({ split }) =>
+      split ? "minmax(400px, 50%) 1fr" : "100%"};
     grid-template-rows: 100%;
   }
 `;
 
 const ReadmeContainer = styled.section`
+  ${({ isVisible }) => (isVisible ? "" : "display: none;")}
   padding: 2rem 2.5rem;
   overflow-y: auto;
   font-size: 18px;

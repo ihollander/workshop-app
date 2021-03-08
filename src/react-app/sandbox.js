@@ -3,11 +3,13 @@ import styled from "styled-components";
 import { ExternalLink } from "@styled-icons/heroicons-outline/ExternalLink";
 import { useParams } from "react-router-dom";
 
-function Sandbox({ exerciseInfo }) {
+function Sandbox({ isVisible, exerciseInfo }) {
   const { exerciseId } = useParams();
   const tabKey = `__workshop_app_sanbox_tab_${exerciseId}`;
 
   const [selectedTab, setSelectedTab] = useState("exercise");
+
+  const { readme, exercise, solution = [] } = exerciseInfo;
 
   useEffect(() => {
     const tab = localStorage.getItem(tabKey) || "exercise";
@@ -18,14 +20,19 @@ function Sandbox({ exerciseInfo }) {
     localStorage.setItem(tabKey, selectedTab);
   }, [tabKey, selectedTab]);
 
-  const { readme, exercise, solution = [] } = exerciseInfo;
+  const title = `${readme.number}. ${readme.title}`;
+  useEffect(() => {
+    if (document.title !== title) {
+      document.title = title;
+    }
+  }, [title]);
 
   const sortedSolutions = [...solution].sort(
     (a, b) => a.extraCreditNumber - b.extraCreditNumber
   );
 
   return (
-    <SandboxContainer>
+    <SandboxContainer isVisible={isVisible}>
       <nav role="tablist">
         <button
           role="tab"
@@ -112,7 +119,7 @@ function Sandbox({ exerciseInfo }) {
 }
 
 const SandboxContainer = styled.section`
-  display: grid;
+  display: ${({ isVisible }) => (isVisible ? "grid" : "none")};
   grid-template-rows: auto 1fr;
 
   nav {
