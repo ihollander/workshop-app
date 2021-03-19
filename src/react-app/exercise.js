@@ -23,31 +23,33 @@ function Exercise({ exercises }) {
     <>
       <ExerciseContainer split={isReadmeVisible && isSandboxVisible}>
         <ReadmeContainer isVisible={isReadmeVisible}>
-          <Suspense fallback={<FullpageLoader />}>
-            <Readme />
-            <ReadmeButtons>
-              {prev ? (
-                <Link to={`/${prev.readme.number}`}>
-                  <span role="img" aria-labelledby="arrow-left">
-                    ←
-                  </span>
-                  <span>Previous</span>
-                </Link>
-              ) : (
-                <div />
-              )}
-              {next ? (
-                <Link to={`/${next.readme.number}`}>
-                  <span>Next</span>
-                  <span role="img" aria-labelledby="arrow-right">
-                    →
-                  </span>
-                </Link>
-              ) : (
-                <div />
-              )}
-            </ReadmeButtons>
-          </Suspense>
+          <ReadmeStyles>
+            <Suspense fallback={<FullpageLoader />}>
+              <Readme />
+              <ReadmeButtons>
+                {prev ? (
+                  <Link to={`/${prev.readme.number}`}>
+                    <span role="img" aria-labelledby="arrow-left">
+                      ←
+                    </span>
+                    <span>Previous</span>
+                  </Link>
+                ) : (
+                  <div />
+                )}
+                {next ? (
+                  <Link to={`/${next.readme.number}`}>
+                    <span>Next</span>
+                    <span role="img" aria-labelledby="arrow-right">
+                      →
+                    </span>
+                  </Link>
+                ) : (
+                  <div />
+                )}
+              </ReadmeButtons>
+            </Suspense>
+          </ReadmeStyles>
         </ReadmeContainer>
         <Sandbox exerciseInfo={exerciseInfo} isVisible={isSandboxVisible} />
       </ExerciseContainer>
@@ -90,6 +92,7 @@ const ExerciseContainer = styled.main`
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: ${({ split }) => (split ? "50% 50%" : "100%")};
+  background: var(--background-primary);
 
   @media (min-width: 800px) {
     grid-template-columns: ${({ split }) =>
@@ -98,12 +101,17 @@ const ExerciseContainer = styled.main`
   }
 `;
 
-const ReadmeContainer = styled.section`
+const ReadmeContainer = styled.div`
   ${({ isVisible }) => (isVisible ? "" : "display: none;")}
-  padding: 2rem 2.5rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
   overflow-y: auto;
-  font-size: 18px;
-  background: var(--background-primary);
+`;
+
+const ReadmeStyles = styled.section`
+  padding: 2rem 2.5rem;
+  font-size: 1.2rem;
 
   ${prismTheme}
 
@@ -128,6 +136,10 @@ const ReadmeContainer = styled.section`
     box-shadow: 0px 0px 0px var(--color-primary);
     transition: box-shadow 100ms ease 0s;
     box-shadow: 0px 2px 0px var(--color-primary);
+  }
+
+  img {
+    max-width: 100%;
   }
 
   > :not(pre) code {
