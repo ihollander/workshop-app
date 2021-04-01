@@ -4,7 +4,10 @@
   "description": "Framework for creating React workshops",
   "author": "ihollander",
   "license": "MIT",
-  "repository": "ihollander/workshop-app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/monatheoctocat/my_package.git"
+  },
   "main": "dist/index.js",
   "engines": {
     "node": ">=10"
@@ -28,7 +31,11 @@
     "@babel/preset-react": "^7.12.13",
     "babel-plugin-macros": "^2.8.0",
     "babel-plugin-minify-dead-code-elimination": "^0.5.1",
-    "babel-plugin-module-resolver": "^4.1.0"
+    "babel-plugin-module-resolver": "^4.1.0",
+    "codegen.macro": "^4.1.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "^4.0.3"
   },
   "peerDependencies": {
     "react": "*",
@@ -39,6 +46,7 @@
     "codegen.js"
   ],
   "scripts": {
+    "start": "npm run build:watch",
     "build": "npx babel src --out-dir dist",
     "build:watch": "npx babel src --watch --out-dir dist"
   },

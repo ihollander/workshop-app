@@ -7,6 +7,7 @@ import FourOhFour from "./four-oh-four";
 import { prismTheme } from "./theme";
 
 function Exercise({ exercises }) {
+  console.log(exercises);
   const { exerciseId } = useParams();
   const exerciseInfo = exercises[exerciseId];
   const [isReadmeVisible, setIsReadmeVisible] = useState(true);
