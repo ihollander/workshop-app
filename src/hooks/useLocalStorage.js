@@ -23,6 +23,13 @@ function useLocalStorage(key, initialValue = null) {
     getLocalStorageValue(key, initialValue)
   );
 
+  // when key changes, read value from localStorage to update state
+  useEffect(() => {
+    const state = getLocalStorageValue(key, fallbackRef.current);
+    setState(state);
+  }, [key]);
+
+  // when value changes, save value to localStorage
   useEffect(() => {
     setLocalStorageValue(key, state);
   }, [key, state]);
