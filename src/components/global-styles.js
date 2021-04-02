@@ -60,7 +60,6 @@ const GlobalStyle = createGlobalStyle`
 
   p {
     line-height: 1.5;
-    letter-spacing: 2px;
   }
 
   li {

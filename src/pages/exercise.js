@@ -140,7 +140,7 @@ const ReadmeStyles = styled.section`
 
   blockquote {
     margin: 0;
-    padding: 4px;
+    padding: 16px;
     font-size: 0.9em;
     background: var(--background-secondary-light);
     border-left: 3px solid var(--color-primary);
