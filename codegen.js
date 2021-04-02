@@ -1,1 +1,1 @@
-module.exports = require("./dist/codegen");
+module.exports = require("./dist/codegen/index").runner;

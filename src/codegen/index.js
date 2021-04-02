@@ -21,4 +21,4 @@ makeApp({
   `;
 }
 
-module.exports = runner;
+module.exports = { runner };
