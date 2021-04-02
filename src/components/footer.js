@@ -15,6 +15,7 @@ function Footer({
           type="checkbox"
           checked={isReadmeVisible}
           onChange={e => setIsReadmeVisible(e.target.checked)}
+          disabled={!isSandboxVisible}
         />
       </label>
       <label>
@@ -23,6 +24,7 @@ function Footer({
           type="checkbox"
           checked={isSandboxVisible}
           onChange={e => setIsSandboxVisible(e.target.checked)}
+          disabled={!isReadmeVisible}
         />
       </label>
     </Wrapper>

@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { Suspense, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Sandbox from "../components/sandbox";
@@ -8,11 +8,31 @@ import FourOhFour from "../pages/four-oh-four";
 import Footer from "../components/footer";
 import NextPrevButtons from "../components/next-prev-buttons";
 
+function visibilityReducer(state, action) {
+  switch (action.type) {
+    case "TOGGLE_README_VISIBITY":
+      if (state.isReadmeVisible && !state.isSandboxVisible) return state;
+      return { ...state, isReadmeVisible: action.payload };
+    case "TOGGLE_SANDBOX_VISIBITY":
+      if (!state.isReadmeVisible && state.isSandboxVisible) return state;
+      return { ...state, isSandboxVisible: action.payload };
+    default:
+      return state;
+  }
+}
+
 function ExercisePage({ exercises, projectTitle }) {
   const { exerciseId } = useParams();
+
+  const [{ isReadmeVisible, isSandboxVisible }, dispatch] = useReducer(
+    visibilityReducer,
+    {
+      isReadmeVisible: true,
+      isSandboxVisible: true,
+    }
+  );
+
   const exerciseInfo = exercises[exerciseId];
-  const [isReadmeVisible, setIsReadmeVisible] = useState(true);
-  const [isSandboxVisible, setIsSandboxVisible] = useState(true);
 
   if (!exerciseInfo) return <FourOhFour />;
 
@@ -22,7 +42,10 @@ function ExercisePage({ exercises, projectTitle }) {
     <Wrapper>
       <Header exercises={exercises} projectTitle={projectTitle} />
       <ExerciseWrapper split={isReadmeVisible && isSandboxVisible}>
-        <ReadmeContainer isVisible={isReadmeVisible}>
+        <ReadmeContainer
+          isVisible={isReadmeVisible}
+          split={isReadmeVisible && isSandboxVisible}
+        >
           <Suspense fallback={<FullpageLoader />}>
             <ReadmeStyles>
               <Readme />
@@ -34,9 +57,13 @@ function ExercisePage({ exercises, projectTitle }) {
       </ExerciseWrapper>
       <Footer
         isReadmeVisible={isReadmeVisible}
-        setIsReadmeVisible={setIsReadmeVisible}
+        setIsReadmeVisible={isVisible =>
+          dispatch({ type: "TOGGLE_README_VISIBITY", payload: isVisible })
+        }
         isSandboxVisible={isSandboxVisible}
-        setIsSandboxVisible={setIsSandboxVisible}
+        setIsSandboxVisible={isVisible =>
+          dispatch({ type: "TOGGLE_SANDBOX_VISIBITY", payload: isVisible })
+        }
       />
     </Wrapper>
   );
@@ -64,10 +91,10 @@ const ExerciseWrapper = styled.main`
 
 const ReadmeContainer = styled.div`
   ${p => (p.isVisible ? "" : "display: none;")}
+  ${p => (p.split ? "overflow-y: auto;" : "")}
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  overflow-y: auto;
 `;
 
 const ReadmeStyles = styled.section`
