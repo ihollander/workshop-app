@@ -7,8 +7,8 @@ import Logo from "./logo";
 import { useTheme } from "../theme";
 
 function Header({ projectTitle, exercises }) {
-  const { colorMode, toggleTheme } = useTheme();
-  const icon = colorMode === "light" ? "☀️" : "🌙";
+  const { theme, toggleTheme } = useTheme();
+  const icon = theme === "light" ? "☀️" : "🌙";
 
   const buttons = exercises.filter(Boolean).map(({ readme }) => (
     <Button key={readme.number} as={NavLink} to={`/${readme.number}`}>
@@ -28,7 +28,7 @@ function Header({ projectTitle, exercises }) {
       <nav>
         <ExerciseNavWrapper>{buttons}</ExerciseNavWrapper>
         <Button onClick={toggleTheme}>
-          <Emojicon emoji={icon} label={colorMode} />
+          <Emojicon emoji={icon} label={theme} />
         </Button>
       </nav>
     </Wrapper>

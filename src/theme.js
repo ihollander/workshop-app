@@ -1,22 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 const ThemeContext = React.createContext();
 
-function getInitialColor() {
-  const savedPreference = window.localStorage.getItem(
-    "__workshop_app_color_mode"
-  );
-  if (savedPreference) return savedPreference;
-
-  const query = window.matchMedia("(prefers-color-scheme: dark)");
-  const theme = query && query.matches ? "dark" : "light";
-
-  setVariables(theme);
-
-  return theme;
-}
-
-const COLORS = {
+const THEMES = {
   light: {
     "--font-color": "black",
     "--font-color-light": "#5e5e5e",
@@ -43,41 +29,34 @@ const COLORS = {
   },
 };
 
-const CSS_PROPERTIES = [
-  "--font-color",
-  "--font-color-light",
-  "--background-primary",
-  "--background-secondary",
-  "--background-secondary-light",
-  "--background-code",
-  "--color-primary",
-  "--color-secondary",
-  "--purple",
-  "--pink",
-];
+function getInitialTheme() {
+  const savedPreference = window.localStorage.getItem("__workshop_app_theme");
+  if (savedPreference) return savedPreference;
 
-function setVariables(theme) {
-  const root = window.document.documentElement;
-
-  for (const key of CSS_PROPERTIES) {
-    root.style.setProperty(key, COLORS[theme][key]);
-  }
+  const query = window.matchMedia("(prefers-color-scheme: dark)");
+  return query && query.matches ? "dark" : "light";
 }
 
 export function ThemeProvider({ children }) {
-  const [colorMode, setColorMode] = React.useState(getInitialColor);
+  const [theme, setTheme] = useState(getInitialTheme);
 
   useEffect(() => {
-    setVariables(colorMode);
-    window.localStorage.setItem("__workshop_app_color_mode", colorMode);
-  }, [colorMode]);
+    if (theme in THEMES) {
+      const root = window.document.documentElement;
+      const themeProperties = THEMES[theme];
+      for (const [key, value] of Object.entries(themeProperties)) {
+        root.style.setProperty(key, value);
+      }
+      window.localStorage.setItem("__workshop_app_theme", theme);
+    }
+  }, [theme]);
 
   function toggleTheme() {
-    setColorMode(colorMode => (colorMode === "light" ? "dark" : "light"));
+    setTheme(theme => (theme === "light" ? "dark" : "light"));
   }
 
   return (
-    <ThemeContext.Provider value={{ colorMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
