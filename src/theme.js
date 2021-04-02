@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 const ThemeContext = React.createContext();
 
@@ -30,15 +31,15 @@ const THEMES = {
 };
 
 function getInitialTheme() {
-  const savedPreference = window.localStorage.getItem("__workshop_app_theme");
-  if (savedPreference) return savedPreference;
-
   const query = window.matchMedia("(prefers-color-scheme: dark)");
   return query && query.matches ? "dark" : "light";
 }
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(getInitialTheme);
+  const [theme, setTheme] = useLocalStorage(
+    "__workshop_app_theme",
+    getInitialTheme()
+  );
 
   useEffect(() => {
     if (theme in THEMES) {
@@ -47,7 +48,6 @@ export function ThemeProvider({ children }) {
       for (const [key, value] of Object.entries(themeProperties)) {
         root.style.setProperty(key, value);
       }
-      window.localStorage.setItem("__workshop_app_theme", theme);
     }
   }, [theme]);
 

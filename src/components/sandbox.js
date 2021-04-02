@@ -1,25 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ExternalLink } from "@styled-icons/heroicons-outline/ExternalLink";
 import useDocumentTitle from "../hooks/useDocumentTitle";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 function Sandbox({ isVisible, exerciseInfo }) {
   const { exerciseId } = useParams();
-  const tabKey = `__workshop_app_sanbox_tab_${exerciseId}`;
 
-  const [selectedTab, setSelectedTab] = useState("exercise");
+  const [selectedTab, setSelectedTab] = useLocalStorage(
+    `__workshop_app_sanbox_tab_${exerciseId}`,
+    "exercise"
+  );
 
   const { readme, exercise, solution = [] } = exerciseInfo;
-
-  useEffect(() => {
-    const tab = localStorage.getItem(tabKey) || "exercise";
-    setSelectedTab(tab);
-  }, [tabKey]);
-
-  useEffect(() => {
-    localStorage.setItem(tabKey, selectedTab);
-  }, [tabKey, selectedTab]);
 
   useDocumentTitle(`${readme.number}. ${readme.title}`);
 
