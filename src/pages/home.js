@@ -2,8 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Logo from "../components/logo";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 function Home({ exercises, projectTitle }) {
+  useDocumentTitle(projectTitle);
+
   const numbers = exercises
     .filter(Boolean)
     .map(ex => ({ title: ex.readme.title, number: ex.readme.number }));

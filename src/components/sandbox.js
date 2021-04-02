@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ExternalLink } from "@styled-icons/heroicons-outline/ExternalLink";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 function Sandbox({ isVisible, exerciseInfo }) {
   const { exerciseId } = useParams();
@@ -20,12 +21,7 @@ function Sandbox({ isVisible, exerciseInfo }) {
     localStorage.setItem(tabKey, selectedTab);
   }, [tabKey, selectedTab]);
 
-  const title = `${readme.number}. ${readme.title}`;
-  useEffect(() => {
-    if (document.title !== title) {
-      document.title = title;
-    }
-  }, [title]);
+  useDocumentTitle(`${readme.number}. ${readme.title}`);
 
   const sortedSolutions = [...solution].sort(
     (a, b) => a.extraCreditNumber - b.extraCreditNumber
