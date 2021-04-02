@@ -1,5 +1,6 @@
 {
   "name": "workshop-app-codegen-example",
+  "title": "Example App",
   "homepage": ".",
   "version": "0.0.0",
   "private": true,

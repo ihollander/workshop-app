@@ -15,7 +15,6 @@ const Wrapper = styled.div`
   display: grid;
   place-content: center;
   height: 100%;
-  width: 100%;
   background: var(--background-primary);
   text-align: center;
 
@@ -24,7 +23,7 @@ const Wrapper = styled.div`
     color: var(--color-primary);
     text-shadow: 1px 1px var(--background-secondary),
       3px 3px var(--color-secondary);
-    margin-right: 0.5rem;
+    margin-right: 8px;
   }
 
   h1 {

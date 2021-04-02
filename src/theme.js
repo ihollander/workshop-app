@@ -72,8 +72,12 @@ export function ThemeProvider({ children }) {
     window.localStorage.setItem("__workshop_app_color_mode", colorMode);
   }, [colorMode]);
 
+  function toggleTheme() {
+    setColorMode(colorMode => (colorMode === "light" ? "dark" : "light"));
+  }
+
   return (
-    <ThemeContext.Provider value={{ colorMode, setColorMode }}>
+    <ThemeContext.Provider value={{ colorMode, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -82,115 +86,3 @@ export function ThemeProvider({ children }) {
 export function useTheme() {
   return useContext(ThemeContext);
 }
-
-export const prismTheme = `
-code[class*="language-"],
-pre[class*="language-"] {
-	color: var(--color-secondary);
-	background: none;
-	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-	font-size: 0.8em;
-	text-align: left;
-	white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
-	word-wrap: normal;
-	line-height: 1.5;
-
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
-
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	hyphens: none;
-}
-
-/* Code blocks */
-pre[class*="language-"] {
-	position: relative;
-	overflow: visible;
-	padding: 0;
-}
-
-.token.comment,
-.token.block-comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-	color: #7F848E;
-	font-style: italic;
-}
-
-.token.punctuation {
-	color: var(--font-color-light);
-}
-
-.token.property,
-.token.tag,
-.token.boolean,
-.token.number,
-.token.function-name,
-.token.constant,
-.token.symbol,
-.token.deleted {
-	color: var(--font-color);
-}
-
-.token.function,
-.token.builtin,
-.token.inserted {
-	color: var(--color-primary);
-}
-
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char {
-  color: var(--purple);
-}
-
-.token.operator,
-.token.entity,
-.token.url,
-.token.variable {
-	color: grey;
-}
-
-.token.atrule,
-.token.attr-value,
-.token.keyword,
-.token.class-name {
-	color: var(--pink);
-}
-
-.token.regex,
-.token.important {
-	color: #e90;
-}
-
-.language-css .token.string,
-.style .token.string {
-	color: #a67f59;
-}
-
-.token.important {
-	font-weight: normal;
-}
-
-.token.bold {
-	font-weight: bold;
-}
-.token.italic {
-	font-style: italic;
-}
-
-.token.entity {
-	cursor: help;
-}
-
-.token.namespace {
-	opacity: .7;
-}
-`;

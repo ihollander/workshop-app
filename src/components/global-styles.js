@@ -18,8 +18,10 @@ const GlobalStyle = createGlobalStyle`
     transition: color 0.4s,background 0.4s,background-color 0.4s,border-color 0.4s;
   }
 
-  body: {
+  html, body, #root {
     margin: 0;
+    padding: 0;
+    height: 100%;
   }
 
   &::-webkit-scrollbar {
@@ -58,6 +60,7 @@ const GlobalStyle = createGlobalStyle`
 
   p {
     line-height: 1.5;
+    letter-spacing: 2px;
   }
 
   li {
@@ -67,15 +70,6 @@ const GlobalStyle = createGlobalStyle`
   *::selection {
     background: var(--color-primary);
     color: white;
-  }
-
-  blockquote {
-    margin: 0;
-    padding: 0.2rem 2rem;
-    font-size: 0.9em;
-    background: var(--background-secondary-light);
-    border-left: 3px solid var(--color-primary);
-    border-radius: 3px;
   }
 `;
 

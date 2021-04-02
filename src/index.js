@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
-import App from "./react-app/app";
+import App from "./components/app";
 
 /* 
 TODOS

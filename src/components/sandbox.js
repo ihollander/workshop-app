@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ExternalLink } from "@styled-icons/heroicons-outline/ExternalLink";
-import { useParams } from "react-router-dom";
 
 function Sandbox({ isVisible, exerciseInfo }) {
   const { exerciseId } = useParams();
@@ -33,152 +33,160 @@ function Sandbox({ isVisible, exerciseInfo }) {
 
   return (
     <SandboxContainer isVisible={isVisible}>
-      <nav role="tablist">
-        <button
-          role="tab"
-          onClick={() => setSelectedTab("exercise")}
+      <TabList>
+        <Tab
+          id="tab-1"
           aria-selected={selectedTab === "exercise" && "true"}
           aria-controls="exercise"
-          id="tab-1"
+          onClick={() => setSelectedTab("exercise")}
         >
           Exercise
-        </button>
+        </Tab>
         {sortedSolutions.length > 0 && (
-          <button
-            role="tab"
+          <Tab
+            id="tab-2"
+            aria-selected={selectedTab.includes("solution") && "true"}
+            aria-controls="solution"
             onClick={() =>
               setSelectedTab(`solution-${sortedSolutions[0].extraCreditNumber}`)
             }
-            aria-selected={selectedTab.includes("solution") && "true"}
-            aria-controls="solution"
-            id="tab-2"
           >
             Solutions
-          </button>
+          </Tab>
         )}
-      </nav>
-      <div
+      </TabList>
+      <TabPanel
         id="exercise"
-        role="tabpanel"
         aria-labelledby="tab-1"
         hidden={selectedTab !== "exercise"}
       >
-        <a href={exercise.isolatedPath} target="_blank" rel="noreferrer">
+        <IsolatedPathLink
+          href={exercise.isolatedPath}
+          target="_blank"
+          rel="noreferrer"
+        >
           <ExternalLink size="20" /> Open in new tab
-        </a>
-        <iframe
+        </IsolatedPathLink>
+        <Iframe
           title={`${readme.title} Exercise`}
           src={exercise.isolatedPath}
         />
-      </div>
-      <div
+      </TabPanel>
+      <TabPanel
         id="solution"
-        role="tabpanel"
         aria-labelledby="tab-2"
         hidden={!selectedTab.includes("solution")}
       >
-        <nav role="tablist">
+        <TabList>
           {sortedSolutions.map(solution => {
             const id = `solution-${solution.extraCreditNumber}`;
             return (
-              <button
+              <Tab
                 key={solution.extraCreditNumber}
-                role="tab"
-                onClick={() => setSelectedTab(id)}
+                id={`tab-solution-${solution.extraCreditNumber}`}
                 aria-selected={selectedTab === id && "true"}
                 aria-controls={id}
-                id={`tab-solution-${solution.extraCreditNumber}`}
+                onClick={() => setSelectedTab(id)}
               >
                 {solution.isExtraCredit
                   ? `Extra Credit ${solution.extraCreditNumber}`
                   : "Exercise Solution"}
-              </button>
+              </Tab>
             );
           })}
-        </nav>
+        </TabList>
         {sortedSolutions.map(solution => (
-          <div
+          <TabPanel
             key={solution.extraCreditNumber}
             id={`solution-${solution.extraCreditNumber}`}
-            role="tabpanel"
             aria-labelledby={`tab-solution-${solution.extraCreditNumber}`}
             hidden={selectedTab !== `solution-${solution.extraCreditNumber}`}
           >
-            <a href={solution.isolatedPath} target="_blank" rel="noreferrer">
+            <IsolatedPathLink
+              href={solution.isolatedPath}
+              target="_blank"
+              rel="noreferrer"
+            >
               <ExternalLink size="20" /> Open in new tab
-            </a>
-            <iframe
+            </IsolatedPathLink>
+            <Iframe
               title={`${readme.title} Solution ${solution.extraCreditNumber}`}
               src={solution.isolatedPath}
             />
-          </div>
+          </TabPanel>
         ))}
-      </div>
+      </TabPanel>
     </SandboxContainer>
   );
 }
 
 const SandboxContainer = styled.section`
-  display: ${({ isVisible }) => (isVisible ? "grid" : "none")};
+  display: ${p => (p.isVisible ? "grid" : "none")};
   grid-template-rows: auto 1fr;
+`;
 
-  nav {
-    background: var(--background-primary);
-  }
-
-  nav button {
-    outline: none;
-    padding: 1rem;
-    background: var(--background-primary);
-    border: none;
-    border-bottom: 2px solid var(--background-secondary-light);
-    color: var(--font-color);
-    cursor: pointer;
-  }
-
-  nav button[aria-selected="true"] {
-    background: var(--background-secondary-light);
-    border-bottom: 2px solid var(--color-primary);
-    color: var(--color-primary);
-  }
-
-  [role="tabpanel"]:not([hidden]) {
+const TabPanel = styled.div.attrs({
+  role: "tabpanel",
+})`
+  &:not([hidden]) {
     display: grid;
     grid-template-rows: auto 1fr;
     height: 100%;
   }
+`;
 
-  [role="tabpanel"] a {
-    display: flex;
-    padding: 1rem;
-    background: var(--background-secondary-light);
-    justify-content: flex-end;
-  }
+const TabList = styled.nav.attrs({
+  role: "tablist",
+})`
+  background: var(--background-primary);
 
-  [role="tabpanel"] nav {
+  ${TabPanel} & {
     background: var(--background-secondary);
   }
+`;
 
-  [role="tabpanel"] nav button {
-    background: var(--background-secondary);
-  }
+const Tab = styled.button.attrs({
+  role: "tab",
+})`
+  outline: none;
+  padding: 16px;
+  background: var(--background-primary);
+  border: none;
+  border-bottom: 2px solid var(--background-secondary-light);
+  color: var(--font-color);
+  cursor: pointer;
 
-  [role="tabpanel"] nav button {
-    border-bottom: 2px solid var(--background-secondary);
-  }
-
-  [role="tabpanel"] nav button[aria-selected="true"] {
+  &[aria-selected="true"] {
     background: var(--background-secondary-light);
     border-bottom: 2px solid var(--color-primary);
     color: var(--color-primary);
   }
 
-  iframe {
-    border: none;
-    width: 100%;
-    height: 100%;
-    background-color: white;
+  /* probably easier to do with props? */
+  ${TabPanel} & {
+    background: var(--background-secondary);
+    border-bottom: 2px solid var(--background-secondary);
   }
+
+  ${TabPanel} &[aria-selected="true"] {
+    background: var(--background-secondary-light);
+    border-bottom: 2px solid var(--color-primary);
+    color: var(--color-primary);
+  }
+`;
+
+const IsolatedPathLink = styled.a`
+  display: flex;
+  padding: 16px;
+  background: var(--background-secondary-light);
+  justify-content: flex-end;
+`;
+
+const Iframe = styled.iframe`
+  border: none;
+  width: 100%;
+  height: 100%;
+  background-color: white;
 `;
 
 export default Sandbox;

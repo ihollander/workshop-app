@@ -1,10 +1,46 @@
+import React from "react";
 import styled from "styled-components";
 
-export default styled.button`
+const STYLES = {
+  small: {
+    fontSize: "0.75rem",
+    padding: "4px 8px",
+    fontWeight: 400,
+  },
+  medium: {
+    fontSize: "1rem",
+    padding: "4px 8px",
+    fontWeight: 400,
+  },
+  large: {
+    fontSize: "2rem",
+    padding: "8px 16px",
+    fontWeight: 700,
+  },
+};
+
+function Button({ size = "medium", children, ...rest }) {
+  const style = STYLES[size];
+  return (
+    <Wrapper
+      style={{
+        "--font-size": style.fontSize,
+        "--font-weight": style.fontWeight,
+        "--padding": style.padding,
+      }}
+      {...rest}
+    >
+      {children}
+    </Wrapper>
+  );
+}
+
+const Wrapper = styled.button`
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  margin: 0.5rem;
+  margin: 8px;
+  padding: var(--padding);
   font-size: 1.25rem;
+  font-weight: var(--font-weight);
   color: var(--font-color);
   border: 3px solid var(--color-primary);
   box-shadow: 4px 4px var(--color-secondary);
@@ -35,10 +71,6 @@ export default styled.button`
     background-color: var(--color-primary);
     color: white;
   }
-
-  span[role="img"] {
-    color: transparent;
-    text-shadow: 0 0 0 var(--font-color);
-    transform: scale(0.8);
-  }
 `;
+
+export default Button;
