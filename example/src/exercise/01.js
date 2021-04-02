@@ -25,7 +25,7 @@ function App() {
 
   return (
     <div style={{ padding: "16px" }}>
-      <h1>Dog Pics</h1>
+      <h1>Dog Piczzz</h1>
       <DogPics pics={pics} />
       <button onClick={handleFetchClick}>Fetch!</button>
     </div>

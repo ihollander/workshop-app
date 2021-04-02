@@ -1,16 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { createBrowserHistory } from "history";
 import App from "./components/app";
 
-/* 
-TODOS
-- code organization?
-- re-rendering - unmount?
-- history location change - prevent unneeded rerenders and fix back button
-- load CSS styles
-*/
-function addFonts() {
+function setupDocument() {
   const preconnect = document.createElement("link");
   preconnect.rel = "preconnect";
   preconnect.href = "https://fonts.gstatic.com";
@@ -30,8 +22,8 @@ function addFonts() {
 const originalDocumentElement = document.documentElement;
 
 function makeApp({ imports, fileInfo, projectTitle }) {
-  // add fonts
-  addFonts();
+  // add fonts, styles, etc.
+  setupDocument();
 
   // build navigation
   const exercises = [];
@@ -50,103 +42,75 @@ function makeApp({ imports, fileInfo, projectTitle }) {
     }
   }
 
-  // create history and listen for changes
-  // use this for the 'isolated' version of the site, which is useful for dev tools debugging
-  const history = createBrowserHistory();
-  let previousLocation = history.location;
-  history.listen(handleLocationChange);
-  handleLocationChange();
+  const { pathname } = window.location;
+  if (!pathname) return;
+  if (pathname.startsWith("/isolated")) {
+    const filePath = pathname.replace("/isolated", "src");
+    const file = fileInfo.find(f => f.filePath === filePath);
+    if (file) {
+      const title = exercises[file.number]?.readme?.title;
+      renderIsolated(file, title);
+    }
+  } else {
+    renderApp(exercises, projectTitle);
+  }
+}
 
-  // when location changes, either run in 'isolated' mode or render the workshop app
-  function handleLocationChange(location = history.location) {
-    const { pathname } = location;
-    if (!pathname) return;
-    let file;
-    if (pathname?.startsWith("/isolated")) {
-      // render isolated component
-      const filePath = pathname.replace("/isolated", "src");
-      file = fileInfo.find(f => f.filePath === filePath);
-      if (file) {
-        renderIsolated(file);
-      }
-    } else {
-      const number = Number(pathname.split("/").slice(-1)[0]);
-      file = fileInfo.find(f => f.type === "readme" && f.number === number);
-      renderReact();
+function renderIsolated(file, title) {
+  file.importFn().then(async module => {
+    if (typeof module.default === "function") {
+      // React component
+      renderComponent(module.default);
+    } else if (typeof module.default === "string") {
+      // HTML file
+      renderHTML(module.default);
     }
 
-    // set title
-    // setTimeout(() => {
-    const title = fileInfo.find(
-      f => f.number === file?.number && f.type === "readme"
-    )?.title;
-    if (file && title) {
+    if (title) {
       const newTitle = `${file.number}. ${title}`;
       if (document.title !== newTitle) {
         document.title = newTitle;
       }
     }
-    // }, 100);
+  });
+}
 
-    previousLocation = location;
-  }
+function renderComponent(component) {
+  const root = document.getElementById("root");
+  ReactDOM.unmountComponentAtNode(root);
+  ReactDOM.render(React.createElement(component), root);
+}
 
-  // this is actually gonna render every exercise and solution (in an iframe or in the window)
-  function renderIsolated(file) {
-    if (history.location !== previousLocation) return;
+function renderHTML(domString) {
+  const domParser = new DOMParser();
+  const newDocument = domParser.parseFromString(domString, "text/html");
+  document.documentElement.replaceWith(newDocument.documentElement);
 
-    file.importFn().then(async module => {
-      if (typeof module.default === "function") {
-        // React component
-        const component = React.createElement(module.default);
-        render(component);
-      } else if (typeof module.default === "string") {
-        // HTML file
-        const domParser = new DOMParser();
-        const newDocument = domParser.parseFromString(
-          module.default,
-          "text/html"
-        );
-        document.documentElement.replaceWith(newDocument.documentElement);
-
-        // scripts need to be added manually so they'll actually run
-        const scripts = document.querySelectorAll("script");
-        for (const script of scripts) {
-          const newScript = document.createElement("script");
-          for (const attrName of script.getAttributeNames()) {
-            // if (attrName === "src") {
-            //   // resolve path from src
-            //   const something = await import("../solution/temp/test.js");
-            // } else {
-            // }
-            newScript.setAttribute(
-              attrName,
-              script.getAttribute(attrName) ?? ""
-            );
-          }
-          newScript.innerHTML = script.innerHTML;
-          script.parentNode.insertBefore(newScript, script);
-          script.remove();
-        }
-      }
-    });
-  }
-
-  function render(ui) {
-    const root = document.getElementById("root");
-    ReactDOM.unmountComponentAtNode(root);
-    ReactDOM.render(ui, root);
-  }
-
-  function renderReact() {
-    if (document.documentElement !== originalDocumentElement) {
-      document.documentElement.replaceWith(originalDocumentElement);
+  // scripts need to be re-added manually so they'll actually run
+  const scripts = document.querySelectorAll("script");
+  for (const script of scripts) {
+    const newScript = document.createElement("script");
+    for (const attrName of script.getAttributeNames()) {
+      newScript.setAttribute(attrName, script.getAttribute(attrName) ?? "");
     }
-    ReactDOM.render(
-      <App exercises={exercises} projectTitle={projectTitle} />,
-      document.getElementById("root")
-    );
+
+    // exercise scripts should all be modules, so variables get their own scope (otherwise hot reload breaks)
+    newScript.setAttribute("type", "module");
+
+    newScript.innerHTML = script.innerHTML;
+    script.parentNode.insertBefore(newScript, script);
+    script.remove();
   }
 }
 
-export { makeApp };
+function renderApp(exercises, projectTitle) {
+  if (document.documentElement !== originalDocumentElement) {
+    document.documentElement.replaceWith(originalDocumentElement);
+  }
+  ReactDOM.render(
+    <App exercises={exercises} projectTitle={projectTitle} />,
+    document.getElementById("root")
+  );
+}
+
+export default makeApp;

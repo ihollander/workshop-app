@@ -4,56 +4,6 @@ const glob = require("glob");
 const path = require("path");
 const fs = require("fs");
 
-// revisit if you decide exercises need multiple files?
-// const fileInfo = [
-//   undefined,
-//   {
-//     exercise: "import from exercise/index.js",
-//     solution: "import from solution/index.js",
-//     readme: "import from README.md",
-//     title: "first line of README.md"
-//   }
-// ]
-
-// function getTitle(readmePath) {
-//   const contents = String(fs.readFileSync(readmePath));
-//   const [firstLine] = contents.split(/\r?\n/);
-//   const titleMatch = firstLine.match(/# (?<title>.*)$/);
-//   return titleMatch?.groups?.title || "";
-// }
-
-// function getFiles() {
-//   const cwd = process.cwd();
-//   const fileList = glob.sync("**/*.+(js|html|md)");
-//   const fileInfo = [];
-//   for (const filePath of fileList) {
-//     const [baseDir, folder] = filePath.split("/");
-//     const isExerciseDirectory = /\d/.test(baseDir);
-//     if (!isExerciseDirectory) continue;
-
-//     const fullFilePath = path.join(cwd, filePath);
-//     const { dir, name, ext } = path.parse(fullFilePath);
-//     const number = Number(baseDir)
-//     if (!(number in fileInfo)) {
-//       fileInfo[number] = {}
-//     }
-//     // readme
-//     if (ext === "md" || ext === "mdx") {
-//       fileInfo[number].title = getTitle(fullFilePath)
-//       fileInfo[number].readme = {
-//         id: filePath,
-//         fullFilePath,
-//         filePath,
-//         ext,
-//         fileName: name,
-//         isolatedPath: filePath.replace("src", "/isolated"),
-//       };
-//     }
-//     // exercise
-//     // solution
-//   }
-// }
-
 function loadFiles() {
   const cwd = process.cwd();
   const fileInfo = glob

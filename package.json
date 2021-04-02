@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.13.9",
-    "history": "^5.0.0",
     "mdx-loader": "^3.0.2",
     "raw-loader": "^4.0.2",
     "react-router-dom": "^5.2.0",
