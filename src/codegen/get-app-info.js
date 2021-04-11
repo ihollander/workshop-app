@@ -61,7 +61,7 @@ function getAppInfo() {
     if (ext === ".html") {
       loaders = "!raw-loader!";
     } else if (ext === ".md" || ext === ".mdx") {
-      loaders = "!babel-loader!mdx-loader!";
+      loaders = "!babel-loader!@mdx-js/loader!";
     }
 
     const relativePath = filePath.replace("src/", "./");

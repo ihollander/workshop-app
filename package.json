@@ -14,8 +14,10 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.13.9",
-    "mdx-loader": "^3.0.2",
+    "@mdx-js/loader": "^1.6.22",
+    "prism-react-renderer": "^1.2.0",
     "raw-loader": "^4.0.2",
+    "react-live": "^2.2.3",
     "react-router-dom": "^5.2.0",
     "styled-components": "^5.2.1",
     "styled-icons": "^10.29.0",
