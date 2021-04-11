@@ -81,7 +81,7 @@ function renderComponent(component) {
   ReactDOM.render(React.createElement(component), root);
 }
 
-function renderHTML(domString) {
+async function renderHTML(domString) {
   const domParser = new DOMParser();
   const newDocument = domParser.parseFromString(domString, "text/html");
   document.documentElement.replaceWith(newDocument.documentElement);
@@ -95,11 +95,25 @@ function renderHTML(domString) {
     }
 
     // exercise scripts should all be modules, so variables get their own scope (otherwise hot reload breaks)
-    newScript.setAttribute("type", "module");
-
+    if (!script.hasAttribute("src") && !script.hasAttribute("type")) {
+      newScript.setAttribute("type", "module");
+    }
+    // run the script
     newScript.innerHTML = script.innerHTML;
     script.parentNode.insertBefore(newScript, script);
     script.remove();
+
+    // wait for external scripts to load before running the next one
+    if (script.hasAttribute("src")) {
+      await new Promise(resolve => {
+        newScript.onload = resolve;
+      });
+    }
+  }
+
+  // Run babel
+  if (window.Babel) {
+    window.Babel.transformScriptTags();
   }
 }
 
