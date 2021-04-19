@@ -1,6 +1,6 @@
 {
   "name": "@ihollander/workshop-app",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Framework for creating React workshops",
   "author": "ihollander",
   "license": "MIT",
