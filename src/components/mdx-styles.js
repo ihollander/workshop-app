@@ -57,26 +57,14 @@ const Code = styled.code`
   }
 `;
 
-const Pre = styled.pre`
-  position: relative;
-  margin: 32px -16px;
-  padding: 16px;
-  background: var(--background-code);
-  border: 3px solid var(--color-primary);
-  box-shadow: 1px 1px var(--background-primary), 4px 4px var(--color-secondary);
-  border-radius: 3px;
-  overflow: auto;
-  font-size: 0.9em;
-`;
-
 const components = {
   h1: H1,
   a: Link,
   img: Image,
   blockquote: Blockquote,
-  pre: Pre,
   inlineCode: Code,
   code: CodeBlock,
+  pre: props => <div {...props} />,
   wrapper: Wrapper,
 };
 

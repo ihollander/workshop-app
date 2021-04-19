@@ -1,6 +1,7 @@
 const prismTheme = {
   plain: {
-    color: "var(--color-primary)",
+    color: "var(--color-secondary)",
+    fontFamily: "Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace",
   },
   styles: [
     {
@@ -23,22 +24,19 @@ const prismTheme = {
       },
     },
     {
-      types: [
-        "property",
-        "tag",
-        "boolean",
-        "number",
-        "function-name",
-        "constant",
-        "symbol",
-        "deleted",
-      ],
+      types: ["attr-name", "boolean", "number"],
       style: {
         color: "var(--font-color)",
       },
     },
     {
-      types: ["selector", "attr-name", "string", "char"],
+      types: ["tag", "function-name", "constant", "symbol", "deleted"],
+      style: {
+        color: "var(--color-secondary)",
+      },
+    },
+    {
+      types: ["selector", "string", "char"],
       style: {
         color: "var(--purple)",
       },
@@ -50,7 +48,7 @@ const prismTheme = {
       },
     },
     {
-      types: ["function", "builtin", "inserted", "dom"],
+      types: ["property", "function", "builtin", "inserted", "dom"],
       style: {
         color: "var(--color-primary)",
       },
